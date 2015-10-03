@@ -6,12 +6,12 @@
 <body>
   <h1>Domer Doors Dev Plan</h1>
   <h3>Relational Schema of Database</h3>
-  <p>Resident(varchar [8] netID primary key, int year, int pickNum, varchar [50] name, int roomNum, varhcar[20] dorm)</p>
-  <p>Section(varchar [25] dorm, int floor, int minRoom, int maxRoom, bool party, int showers, int urinals, int toilets primary key(floor, minRoom, maxRoom))</p>
-  <p>Room(varchar [20] dorm, int roomNum, int numResidents, bool quadView, bool buidlingView, int floor, bool is Occupied, bool freshRoom primary key (dorm, roomNum))</p>
+  <p>Resident(varchar [8] netID, int year, int pickNum, varchar [50] name, int roomNum, varhcar[20] dorm, primary key(detID, dorm) )</p>
+  <p>Section(varchar [25] dorm, int floor, int minRoom, int maxRoom, bool party, int showers, int urinals, int toilets, primary key(floor, minRoom, maxRoom))</p>
+  <p>Room(varchar [20] dorm, int roomNum, int numResidents, bool quadView, bool buidlingView, int floor, bool is Occupied, bool freshRoom, primary key (dorm, roomNum))</p>
   <p>Pick(int pickNum primary key, varchar [8] netID, varchar [25] dorm, int roomNum)</p>
   <h3>Database, Platforms, and Languages</h3>
-  <p>The group will be using mySQL, php, html/css, and javaScript for the project. The version control used will be GitHub.</p>
+  <p>The group will be using MySQL, php, HTML/CSS and JavaScript for the project. The version control used will be GitHub.</p>
   <h3>Data Gathering</h3>
   <p>The group will gather data from the university's architect's office and administration office. The data will include floor plans of each dorm, designs of each building, and student netIDs. If no student netIDs are given, the group will ask for voluntary IDs of the students in our halls.</p>
   <h3>Who's Doing What</h3>
@@ -25,12 +25,17 @@
 <p>As the project progresses, the split will still be relatively even, however, Jack and David will attempt to help the group implement more advanced UI features. Ben and Cory will be doing more advanced, in-depth query searching. Saying this, all will still be equally involved but with some more advanced features being handled by different members of the group based on experience in a certain field.</p>
   <h3>Project Timeline:</h3>
   <ul>
-	<li>Something</li>
+  <li>October 7 : Have all building schematics from university architect</li>
 	<li>October 10 : Setup Development Enviornment</li>
-	<li>Something</li>
-  <li>Something else</li>
+  <li>October 14 : Have student netIDs provided by the university or from voluntary students</li>
+  <li>October 16 : Have Knott, Dillon, Fischer, and Carroll data in database. Develope basic webpages for choosing dorms, choosing floor, and filling out forms for prefered living enviornment. </li>
+  <li>October 26 : Have queries for basic information for finding rooms, and recommending rooms based on preferences</li>
+  <li>October 30 : </li>
 	<li>November 3 : Initial Demo</li>
-	<li>Something</li>
+  <li>November 13 : Finalize queries for searching for rooms based on interests</li>
+  <li>November 20 : Finalize cross reference between roomates</li>
+  <li>November 27 : Start implementing advanced graphic features and a few (or all) dorms</li>
+	<li>December 10 : Finalize advanced graphic features and a few (or all) dorms
 	<li>December 17 : Final Demo and Report</li>
   <ul>
 

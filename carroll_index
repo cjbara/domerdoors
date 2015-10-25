@@ -1,0 +1,47 @@
+<head>
+  <title>Carroll Hall</title>
+  <!--These two links are for bootstrap -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+  <div class="jumbotron">
+    <h1>Welcome to Carroll Hall</h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <h3>Please fill out the following form and then begin choosing your room for next year</h3>
+      <form>
+      <h4>Will you/your roomates spend most of the time:</h4>
+      <input type="radio" name="function" id="OrbOn">Studying
+      <input type="radio" name="function" id="OrbOff">Having Fun
+      <input type="radio" name="function" id="OrbOn">An even amount of both
+      <h4>Do you and/or your roomates want to be close to or far from a RA/AR/Rector:</h4>
+      <input type="radio" name="function" id="OrbOn">Close to
+      <input type="radio" name="function" id="OrbOff">Far from
+      <h4>Do you and/or your roomates want to be close to or far from stairs:</h4>
+      <input type="radio" name="function" id="OrbOn">Close to
+      <input type="radio" name="function" id="OrbOff">Far from
+      <h4>Do you and/or your roomates want to be close to or far from the elevator:</h4>
+      <input type="radio" name="function" id="OrbOn">Yes
+      <input type="radio" name="function" id="OrbOff">No
+      <h4>Do you and/or your roomates want a nice view of campus:</h4>
+      <input type="radio" name="function" id="OrbOn">Yes
+      <input type="radio" name="function" id="OrbOff">No
+      </form>
+      <h4>Please select floor:</h4>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dormDropdown" data-toggle="dropdown">Floor <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+              <li><a href="#">2</a></li>
+              <li><a href="#">3</a></li>
+              <li><a href="#">4</a></li>
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</body>

@@ -6,10 +6,10 @@
 <body>
   <h1>Domer Doors Dev Plan</h1>
   <h3>Relational Schema of Database</h3>
-  <p>Resident(varchar [8] netID, int year, int pickNum, varchar [50] name, int roomNum, varhcar[20] dorm, primary key(detID, dorm) )</p>
-  <p>Section(varchar [25] dorm, int floor, int minRoom, int maxRoom, bool party, int showers, int urinals, int toilets, primary key(floor, minRoom, maxRoom))</p>
-  <p>Room(varchar [20] dorm, int roomNum, int numResidents, bool quadView, bool buidlingView, int floor, bool is Occupied, bool freshRoom, primary key (dorm, roomNum))</p>
-  <p>Pick(int pickNum primary key, varchar [8] netID, varchar [25] dorm, int roomNum)</p>
+  <p>Resident(varchar [8] netID, int year, int pickNum, varchar [50] name, int roomNum, varchar[20] dorm, bool isStaff, bool party, bool study, bool closeToStaff, bool closeToStairs, bool closeToElevator, bool goodView, primary key(netID), foreign key (pickNum) references Pick(pickNum))</p>
+  <p>Section(varchar [20] dorm, varchar[10] sectionID, int floor not null, primary key(dorm, sectionID))</p>
+  <p>Room(varchar [20] dorm, int roomNum, varchar[10] section not null, int numResidents not null, int floor, bool hasGoodView, bool isOccupied, bool freshmanRoom, bool staffRoom, bool lounge, bool studyRoom, bool bathroom, int sqareFootage, bool closeToStairs, bool closeToElevator, primary key (dorm, roomNum), foreign key (section) references Section(sectionID))</p>
+  <p>Pick(int pickNum primary key, varchar [8] netID, varchar [20] dorm, int roomNum, foreign key (roomNum) as Room(roomNum), foreign key (netID) references Resident(netID))</p>
   <h3>Database, Platforms, and Languages</h3>
   <p>The group will be using MySQL, php, HTML/CSS and JavaScript for the project. The version control used will be GitHub.</p>
   <h3>Data Gathering</h3>

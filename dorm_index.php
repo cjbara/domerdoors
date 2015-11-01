@@ -14,7 +14,12 @@ echo $dormName;
 <body>
 <div class="container">
   <div class="jumbotron">
-    <h1>Welcome to Knott Hall</h1>
+    <h1>Welcome to
+<?php
+$dormName = $_REQUEST['dorm'];
+echo $dormName;
+?>
+</h1>
   </div>
   <div class="row">
     <div class="col-sm-6">

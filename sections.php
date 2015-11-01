@@ -17,7 +17,6 @@ echo "<table>\n";
 echo "\t<tr>\n
 	\t\t<th>Dorm</th>\n
 	\t\t<th>Section</th>\n
-	\t\t<th>Floor</th>\n
 	\t</tr>\n";
 while ($tuple = mysqli_fetch_array($result, MYSQL_ASSOC)) {
  echo "\t<tr>\n";

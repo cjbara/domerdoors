@@ -6,7 +6,7 @@
 <body>
   <h1>Domer Doors Dev Plan</h1>
   <h3>Relational Schema of Database</h3>
-  <p>Resident(netID varchar(8) primary key, year int not null, name varchar(50) not null, roomNum varchar(5), dorm varchar(20), isStaff bool, party bool, study bool, closeToStaff bool, closeToStairs bool, closeToElevator bool, goodView bool, foreign key (pickNum) references Pick(pickNum))</p>
+  <p>Resident(netID varchar(8) primary key, year int not null, name varchar(50) not null, password varchar(32), roomNum varchar(5), dorm varchar(20), isStaff bool, party bool, study bool, closeToStaff bool, closeToStairs bool, closeToElevator bool, goodView bool, prefSection varchar(5), prefFloor int, foreign key (pickNum) references Pick(pickNum))</p>
   <p>Section(dorm varchar(20), sectionID varchar(10), primary key(dorm, sectionID))</p>
   <p>Room(dorm varchar(20), roomNum int, sectionID varchar(10) not null, numResidents int not null, floor int, hasGoodView bool, isOccupied bool, freshmanRoom bool, staffRoom bool, lounge bool, studyRoom bool, bathroom bool, sqareFootage int, closeToStairs bool, closeToElevator bool, primary key (dorm, roomNum), foreign key (sectionID) references Section(sectionID))</p>
   <p>Pick(pickNum int primary key, netID varchar(8) unique, dorm varchar(20) primary key, foreign key (roomNum) references Room(roomNum), foreign key (netID) references Resident(netID))</p>

@@ -12,18 +12,30 @@ if (!$conn) {
 }
 
 //Create variables
-$netID = "'".$_POST['netID']."'";
-$name = "'".$_POST['name']."'";
-$year = "'".$_POST['year']."'";
+$netID = (ISSET($_POST['netID']) ? "'".$_POST['netID']."'" : null);
+$password = (ISSET($_POST['password']) ? "'".$_POST['password']."'" : null);
+$year = (ISSET($_POST['year']) ? $_POST['year'] : null);
+$name = (ISSET($_POST['name']) ? "'".$_POST['name']."'" : null);
 
-$sql = "INSERT INTO Resident (netID, name, year) values ($netID, $name, $year)";
+//if all fields are entered
+if( ($netID && $password && $year && $name) ) {
+
+$sql = "INSERT INTO Resident (netID, name, year, password) values ($netID, $name, $year, $password)";
 
 if (mysqli_query($conn, $sql)) {
     echo "New user created successfully";
+	$url = 'userPrefs.php';
+	$params = 'netID='.$netID.'&password='.$password;
+
+	header('Location: '.$url.'?'.$params);
 } else {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    echo "Error: Could not make this new user for netID $netID";
 }
 
 mysqli_close($conn);
 
+
+} else {
+	header('Location: newUser.php');
+}
 ?>

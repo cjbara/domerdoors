@@ -10,6 +10,7 @@
   <p>Section(dorm varchar(20), sectionID varchar(10), primary key(dorm, sectionID))</p>
   <p>Room(dorm varchar(20), roomNum int, sectionID varchar(10) not null, numResidents int not null, floor int, hasGoodView bool, isOccupied bool, freshmanRoom bool, staffRoom bool, lounge bool, studyRoom bool, bathroom bool, sqareFootage int, closeToStairs bool, closeToElevator bool, primary key (dorm, roomNum), foreign key (sectionID) references Section(sectionID))</p>
   <p>Pick(pickNum int primary key, netID varchar(8) unique, dorm varchar(20) primary key, foreign key (roomNum) references Room(roomNum), foreign key (netID) references Resident(netID))</p>
+  <p>Favorites(netID varchar(8), dorm varchar(20), roomNum varchar(5), favoriteNumber int, primary key (netID, favoriteNumber), foreign key (netID) references Resident(netID))</p>
   <h3>Database, Platforms, and Languages</h3>
   <p>The group will be using MySQL, php, HTML/CSS and JavaScript for the project. The version control used will be GitHub.</p>
   <h3>Data Gathering</h3>
@@ -28,7 +29,7 @@
   <li>October 7 : Have all building schematics from university architect</li>
 	<li>October 10 : Setup Development Enviornment</li>
   <li>October 14 : Have student netIDs provided by the university or from voluntary students</li>
-  <li>October 16 : Have Knott, Dillon, Fischer, and Carroll data in database. Develope basic webpages for choosing dorms, choosing floor, and filling out forms for prefered living enviornment. </li>
+  <li>October 16 : Have Knott, Dillon, Fisher, and Carroll data in database. Develope basic webpages for choosing dorms, choosing floor, and filling out forms for prefered living enviornment. </li>
   <li>October 26 : Have queries for basic information for finding rooms, and recommending rooms based on preferences</li>
   <li>October 30 : </li>
 	<li>November 3 : Initial Demo</li>
@@ -37,7 +38,9 @@
   <li>November 27 : Start implementing advanced graphic features and a few (or all) dorms</li>
 	<li>December 10 : Finalize advanced graphic features and a few (or all) dorms
 	<li>December 17 : Final Demo and Report</li>
-  <ul>
+  </ul>
+
+<h3><a href="https://www.youtube.com/watch?v=ykaPP_zEDYM" >Demo Video</a></h3>
 
 </body>
 </html>

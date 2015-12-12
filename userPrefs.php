@@ -8,27 +8,47 @@
 
 </head>
 <body>
-
-<div class="container">
-  <div class="jumbotron">
-    <h1>Welcome,  
-	<?php
+<!--PHP script at top so rest of html/css can get variables-->
+<?php
 	    // Connect and select database
-	    $link = mysqli_connect("localhost", "dlewis12", "db2017","domerdoors")
+	    $link = mysqli_connect("localhost", "cjbara", "database","domerdoors")
 		or die ("Connection failed: " .mysqli_connect_error());
 
 	    //Get netID and query for name
 	    $netID = $_REQUEST['netID'];
 	    $pwd = $_REQUEST['password'];
-	    $query = "select name from Resident where Resident.netID = $netID and Resident.password = $pwd;";
+	    $query = "select name, isStaff from Resident where Resident.netID = $netID and Resident.password = $pwd;";
 	    $result = mysqli_query($link,$query);
 
 	    if(mysqli_num_rows($result) > 0){
 		// output data of each row
 		while($row = mysqli_fetch_assoc($result)) {
-		    echo $row['name'];
+		    $name = $row['name'];
+		    $isStaff = $row['isStaff'];
 	    	}
 	    }
+	?>
+<!---Navigation Bar at top-->
+  <nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+  	<!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+      <ul class="nav navbar-nav">
+      	<li><a href="dorm.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Dorm</a></li>
+        <li class="active"><a href="userPrefs.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">User Preferences <span class="sr-only">(current)</span></a></li>
+        <li><a href="pick.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Pick</a></li>
+   	  </ul>
+   	  <ul class="nav navbar-nav navbar-right">
+   	  	<li><a href="index.html">Logout</a></li>
+   	  </ul>
+  	</div>
+    </div>
+  </nav>
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>Welcome,  
+	<?php
+	    echo $name;
 	?>
     </h1>
   </div>
@@ -39,31 +59,61 @@
             //Get netID and query for name
             $netID = $_REQUEST['netID'];
             $pwd = $_REQUEST['password'];
-            $query = "select year, dorm, roomNum, party, study, closeToStaff, closeToStairs, closeToElevator, goodView, prefSection, prefFloor from Resident where Resident.netID = $netID and Resident.password = $pwd;";
+            $query = "select year, dorm, roomNum, party, study, closeToStaff, closeToStairs, closeToElevator, goodView, prefSection, prefFloor , prefRoomSize from Resident where Resident.netID = $netID and Resident.password = $pwd;";
             $result = mysqli_query($link,$query);
 
-	    $tablearr = array("Graduation Year", "Dorm", "Room Number", "Like to party?", "Like to study in room?", "Want to be near Hall Staff?", "Want to be near stairs?", "Want to be near an elevator?", "Want a good view?", "Preferred Section", "Preferred Floor");
-	    $i = 0; // to index through array
-
-            if(mysqli_num_rows($result) > 0){
+            if(mysqli_num_rows($result)){
 		// output data of each row
-		echo "<table class=\"table table-striped\">\n";
-		$tuple = mysqli_fetch_array($result, MYSQL_ASSOC);
-		foreach ($tuple as $col_value) {
-		    if($col_value == "0") { $col_value="No"; }
-		    //if($col_value == 0) { $col_value="No"; }
-		    if($col_value == "1") { $col_value="Yes"; }
-		    echo "\t<tr>\n";
-		    echo "\t\t<td>$tablearr[$i]</td>\n";
-		    echo "\t\t<td>$col_value</td>\n";
-		    echo "\t</tr>\n";
-		    $i = $i + 1;
+		$tuple = mysqli_fetch_assoc($result);
+		echo "<table class=\"table table-bordered table-striped\">\n";
+		echo "<tr><td>Graduation Year</td><td>".$tuple['year']."</td></tr>";
+		echo "<tr><td>Dorm</td><td>".$tuple['dorm']."</td></tr>";
+		echo "<tr><td>Room Number</td><td>";
+		echo ($tuple['roomNum'])?$tuple['roomNum']:"No room picked";
+		echo "</td></tr>";
+		echo "<tr><td>Like to Party?</td><td>";
+		echo ($tuple['party'])?"Yes":"No";
+		echo "</td></tr>";
+		echo "<tr><td>Like to Study in Room?</td><td>";
+		echo ($tuple['study'])?"Yes":"No";
+		echo "</td></tr>";
+		echo "<tr><td>Want to be near Hall Staff?</td><td>";
+		echo ($tuple['closeToStaff'])?"Yes":"No";
+		echo "</td></tr>";
+		echo "<tr><td>Want to be near Stairs?</td><td>";
+		echo ($tuple['closeToStairs'])?"Yes":"No";
+		echo "</td></tr>";
+		echo "<tr><td>Want to be near an Elevator?</td><td>";
+		echo ($tuple['closeToElevator'])?"Yes":"No";
+		echo "</td></tr>";
+		echo "<tr><td>Want a good view?</td><td>";
+		echo ($tuple['goodView'])?"Yes":"No";
+		echo "</td></tr>";
+		echo "<tr><td>Preferred Section</td><td>";
+	    $query = "SELECT S.name FROM Resident R, Section S where netID=$netID and S.ID=R.prefSection;"; 
+	    $query = mysqli_query($link , $query); 
+	    $query = mysqli_fetch_assoc($query);
+	    	echo $query['name'];
+		echo "</td></tr>";
+		echo "<tr><td>Preferred Floor</td><td>";
+		echo ($tuple['prefFloor']==0)?"Basement":$tuple['prefFloor'];
+		echo "</td></tr>";
+		echo "<tr><td>Preferred Setup</td><td>";
+		switch($tuple['prefRoomSize']){
+			case 1: echo "Single"; break;
+			case 2: echo "Double"; break;
+			case 3: echo "Triple"; break;
+			case 4: echo "Quad"; break;
 		}
+		echo "</td></tr>";
 		echo "</table>\n";
             }
         ?>
+ <!-- User Preferences Begin-->
 	<br><br><br><br>
-	<a class="btn btn-danger" href="deleteUser.php">Delete a user?</a>
+	<?php if($isStaff == 1) :?>
+		<a class="btn btn-danger" href="deleteUser.php">Delete a user?</a>
+	<?php endif; ?>
 	</form>	
     </div>
     <div class="col-sm-6">
@@ -76,14 +126,6 @@
 	    <label class="radio-inline"><input type="radio" name="year" value="2017">2017</label>
 	    <label class="radio-inline"><input type="radio" name="year" value="2018">2018</label>
 	    <label class="radio-inline"><input type="radio" name="year" value="2019">2019</label>
-	    <br>
-	    <br>
-            <label for="dorm">Select Dorm:</label>
-	    <br>
-	    <label class="radio-inline"><input type="radio" name="dorm" value="Carroll">Carroll Hall</label>
-	    <label class="radio-inline"><input type="radio" name="dorm" value="Dillon">Dillon Hall</label>
-	    <label class="radio-inline"><input type="radio" name="dorm" value="Fisher">Fisher Hall</label>
-	    <label class="radio-inline"><input type="radio" name="dorm" value="Knott">Knott Hall</label>
 	    <br>
 	    <br>
             <label for="party">Do you like to party in your room?</label>
@@ -122,33 +164,42 @@
 	    <label class="radio-inline"><input type="radio" name="goodView" value="0">No</label>
 	    <br>
 	    <br>
-<!--      <form>
-      <h4>Will you/your roomates spend most of the time:</h4>
-        <input type="radio" name="function" id="Study">Studying
-        <input type="radio" name="function" id="Fun">Having Fun
-        <input type="radio" name="function" id="Both">An even amount of both
-      </form>
-      <form>
-      <h4>Do you and/or your roomates want to be close to or far from a RA/AR/Rector:</h4>
-        <input type="radio" name="function" id="CloseRA">Close to
-        <input type="radio" name="function" id="FarRA">Far from
-      </form>
-      <form>
-      <h4>Do you and/or your roomates want to be close to or far from stairs:</h4>
-        <input type="radio" name="function" id="CloseStrs">Close to
-        <input type="radio" name="function" id="FarStrs">Far from
-      </form>
-      <form>
-      <h4>Do you and/or your roomates want to be close to or far from the elevator:</h4>
-        <input type="radio" name="function" id="CloseElv">Close to
-        <input type="radio" name="function" id="FarElv">Far from
-      </form>
-      <form>
-      <h4>Do you and/or your roomates want a nice view of campus:</h4>
-        <input type="radio" name="function" id="View">Yes
-        <input type="radio" name="function" id="NoView">No
-        <input type="radio" name="function" id="NoPref">Doesn't Matter      
-      </form>-->
+	<?php 
+	    $query = "SELECT dorm FROM Resident where netID=$netID;"; 
+	    $query = mysqli_query($link , $query); 
+	    $query = mysqli_fetch_assoc($query);
+	    $dorm = $query['dorm'];
+
+	    $section = "SELECT name, ID FROM Section where dorm='$dorm';"; 
+	    $section = mysqli_query($link , $section);
+	    echo "<label for=\"prefSection\">What is your preferred section?</label>";
+            echo "<br>";
+	    while (($row = mysqli_fetch_assoc($section))) {
+		echo "<label class=\"radio-inline\"><input type=\"radio\" name=\"prefSection\" value=\"".$row['ID']."\">".$row['name']."</label>";
+	    }
+            echo "<br>";
+            echo "<br>";
+	    $floor = "SELECT distinct floor FROM Room WHERE dorm='$dorm';"; 
+	    $floor = mysqli_query($link , $floor);
+            echo "<label for=\"prefFloor\">What is your preferred floor?</label>";
+            echo "<br>";
+	    while ($row = mysqli_fetch_assoc($floor)) {
+		echo "<label class=\"radio-inline\"><input type=\"radio\" name=\"prefFloor\" value=\"".$row['floor']."\">";
+	    	echo ($row['floor']==0)?"Basement":$row['floor'];
+		echo "</label>";
+	    }
+            echo "<br>";
+            echo "<br>";
+	?>
+
+	    <label for="prefRoomSize">What is your preferred setup?</label>
+	    <br>
+	    <label class="radio-inline"><input type="radio" name="prefRoomSize" value="1">Single</label>
+	    <label class="radio-inline"><input type="radio" name="prefRoomSize" value="2">Double</label>
+	    <label class="radio-inline"><input type="radio" name="prefRoomSize" value="3">Triple</label>
+	    <label class="radio-inline"><input type="radio" name="prefRoomSize" value="4">Quad</label>
+	    <br>
+	    <br>
 	<input class="btn btn-primary" type="submit" name="save" value="Save Changes" />
       </form>
     </div>

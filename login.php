@@ -14,7 +14,7 @@ $query = "select netID, password from Resident where Resident.netID = $netID and
 $result = mysqli_query($link, $query);
 if(mysqli_num_rows($result) > 0) {
     //go to user prefs page
-    $url = 'dorm.php';
+    $url = 'browseFloor.php';
     $params = 'netID='.$netID.'&password='.$pwd;
 
     header('Location: '.$url.'?'.$params);

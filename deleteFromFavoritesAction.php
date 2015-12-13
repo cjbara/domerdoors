@@ -39,4 +39,6 @@ if ($favcheck['c']) {
 }
 mysqli_close($conn);
 
+header('Location: browseFloor.php?netID='.$netID.'&password='.$pw);
+
 ?>

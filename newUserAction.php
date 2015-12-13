@@ -50,7 +50,7 @@ if( ($netID && $password && $year && $name && $dorm ) ) {
 	if (mysqli_query($conn, $sql)) {
 		mysqli_query($conn, $pick);
    		echo "New user created successfully";
-		$url = 'dorm.php';
+		$url = 'userPrefs.php';
 		$params = 'netID='.$netID.'&password='.$password;
 		header('Location: '.$url.'?'.$params);
 	} else {

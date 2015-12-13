@@ -35,7 +35,7 @@
     <div class="container">
   	<!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
       <ul class="nav navbar-nav">
-      	<li><a href="dorm.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Dorm</a></li>
+      	<li><a href="browseFloor.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Browse Rooms</a></li>
         <li><a href="userPrefs.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">User Preferences</a></li>
         <li class="active"><a href="pick.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Pick <span class="sr-only">(current)</span></a></li>
    	  </ul>
@@ -51,6 +51,7 @@
 <div class="row equal">
   <!-- Insert FloorPlan -->
   <div class ="col-xs-6 col-sm-4">
+    <h1 class="text-center">Welcome to <?php echo $dorm; ?></h1><br>
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -121,7 +122,7 @@
           	$resultAvail = mysqli_query($link,$queryAvail);
             //new query for favorites
 		        $netID = $_REQUEST['netID'];
-            $queryFav = "select distinct F.roomNum , R.isOccupied from Favorites F, Room R where F.dorm = '$dorm' and F.dorm=R.dorm and F.netID = $netID and R.roomNum=F.roomNum order by favoriteNumber;";
+            $queryFav = "select distinct F.roomNum , R.isOccupied from Favorites F, Room R where F.dorm = '$dorm' and F.dorm=R.dorm and F.netID = $netID and R.roomNum=F.roomNum order by R.roomNum;";
             $resultFav = mysqli_query($link, $queryFav);
 	   
 	           //query for recomended

@@ -33,7 +33,7 @@
     <div class="container">
   	<!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
       <ul class="nav navbar-nav">
-      	<li><a href="dorm.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Dorm</a></li>
+        <li><a href="browseFloor.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Browse Rooms </a></li>
         <li class="active"><a href="userPrefs.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">User Preferences <span class="sr-only">(current)</span></a></li>
         <li><a href="pick.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Pick</a></li>
    	  </ul>

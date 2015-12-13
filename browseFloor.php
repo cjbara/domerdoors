@@ -32,39 +32,8 @@
           $name = $row['name'];
           $dormName = $row['dorm'];
           }
-              //get image based on dorm
-        if($dormName == "Knott" ){
-          if($floor1 != null) $floorNum = 109801;
-          if($floor2 != null) $floorNum = 109802;
-          if($floor3 != null) $floorNum = 109803;
-          if($floor4 != null) $floorNum = 109804;
-        }
-        else if ($dormName == "Carroll"){
-          if($basement != null) $floorNum = "1017BSMT";
-          if($floor1 != null) $floorNum = 101701;
-          if($floor2 != null) $floorNum = 101702;
-          if($floor3 != null) $floorNum = 101703;
-          if($floor4 != null) $floorNum = 101704;
-        }
-        else if ($dormName == "Fisher"){
-          if($basement != null) $floorNum = "1051BSMT";
-          if($floor1 != null) $floorNum = 105101;
-          if($floor2 != null) $floorNum = 105102;
-          if($floor3 != null) $floorNum = 105103;
-          if($floor4 != null) $floorNum = 105104;
-        }
-        else if ($dormName == "Dillon"){
-          if($basement != null) $floorNum = "1030BSMT";
-          if($floor1 != null) $floorNum = 103001;
-          if($floor2 != null) $floorNum = 103002;
-          if($floor3 != null) $floorNum = 103003;
-        }
     }
     //if($_SERVER['REQUEST_METHOD'] === 'REQUEST'){
-    if(isset($floorNum)){
-    } else {
-      $floorNum = $_REQUEST['floorNum'];
-    }
       //$floorNum = $_REQUEST(['floorNum']);
   //    echo "$floorNum and $dormName";
 
@@ -110,7 +79,7 @@
     <div class=container>
         <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
       <ul class="nav navbar-nav">
-        <li class="active"><a href="dorm.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Dorm <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="browseFloor.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Browse Rooms <span class="sr-only">(current)</span></a></li>
         <li><a href="userPrefs.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">User Preferences</a></li>
         <li><a href="pick.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>">Pick</a></li>
           </ul>
@@ -122,9 +91,66 @@
     </div>
   </nav>
 <!-- Insert Floor Screenshot-->
+
 <div class="row equal">
   <div class="col-sm-4">
+    <?php
+        //get image based on dorm
+        if($dormName == "Knott" ){
+	  $hasbasement = false;
+	  $floors = 4;
+	  $floorNum = 109801;
+          if($floor2 != null) $floorNum = 109802;
+          if($floor3 != null) $floorNum = 109803;
+          if($floor4 != null) $floorNum = 109804;
+        }
+        else if ($dormName == "Carroll"){
+	  $hasbasement = true;
+	  $floors = 4;
+          $floorNum = 101701;
+          if($basement != null) $floorNum = "1017BSMT";
+          if($floor2 != null) $floorNum = 101702;
+          if($floor3 != null) $floorNum = 101703;
+          if($floor4 != null) $floorNum = 101704;
+        }
+        else if ($dormName == "Fisher"){
+	  $hasbasement = true;
+	  $floors = 4;
+          $floorNum = 105101;
+          if($basement != null) $floorNum = "1051BSMT";
+          if($floor2 != null) $floorNum = 105102;
+          if($floor3 != null) $floorNum = 105103;
+          if($floor4 != null) $floorNum = 105104;
+        }
+        else if ($dormName == "Dillon"){
+	  $hasbasement = true;
+	  $floors = 3;
+          $floorNum = 103001;
+          if($basement != null) $floorNum = "1030BSMT";
+          if($floor2 != null) $floorNum = 103002;
+          if($floor3 != null) $floorNum = 103003;
+        }
+    if(isset($floorNum)){
+    } else {
+      $floorNum = $_REQUEST['floorNum'];
+    }
+    ?>
+    <h1 class="text-center">Welcome to <?php echo $dormName; ?></h1><br>
     <img src="FloorPlans/<?php echo $dormName;?>/<?php echo $floorNum;?>.jpg" width="100%" id="zoom_01" data-zoom-image="FloorPlans/<?php echo $dormName;?>/<?php echo $floorNum;?>.jpg" />
+    <form action="browseFloor.php?netID=<?php echo "$netID"?>&password=<?php echo "$pwd"?>&type=<?php echo "'Inc'";?>&type1=<?php echo "'Single'";?>&type2=<?php echo "'Double'";?>&type3=<?php echo "'Triple'";?>&type4=<?php echo "'Quad'";?>" method="post" align="middle">
+      <h4>Choose Floorplan to view:</h4>
+      <div class="btn-group-wrap">
+         <div class="btn-group round" role="group" aria-label="...">
+           <?php
+             if($hasbasement == true){
+               echo "<button type='submit' class='btn btn-default' name='basement'>Basement";
+             }
+             for($i = 1; $i<=$floors; $i = $i + 1){
+               echo "<button type='submit' class='btn btn-default' name='$i'>Floor $i";
+             }
+           ?>
+        </div>
+      </div>
   </div>
 <!--Sort rooms by-->
   <div class="col-sm-2">
@@ -145,8 +171,8 @@
     <form action="browseFloor.php?netID=<?php echo "$netID";?>&password=<?php echo "$pwd";?>&floorNum=<?php echo "$floorNum";?>" method="post">
       <label class="radio-inline"><input type="radio" name="type" value="Inc">Increasing</label><br>
       <label class="radio-inline"><input type="radio" name="type" value="Dec">Decreasing</label><br>
-      <label class="radio-inline"><input type="radio" name="type" value="sizeDec">Room Size Increasing</label><br>
-      <label class="radio-inline"><input type="radio" name="type" value="sizeInc">Room Size Decreasing</label><br><br>
+      <label class="radio-inline"><input type="radio" name="type" value="sizeInc">Smallest to Largest</label><br>
+      <label class="radio-inline"><input type="radio" name="type" value="sizeDec">Largest to Smallest</label><br><br>
     <h4>Type of room:</h4>
       <label class="checkbox-inline"><input type="checkbox" name="type1" value="Single">Single</label><br>
       <label class="checkbox-inline"><input type="checkbox" name="type2" value="Double">Double</label><br>
@@ -228,7 +254,7 @@
             if(mysqli_num_rows($result) > 0){
               while($row = mysqli_fetch_assoc($result)){
 		$roomNum = $row['roomNum'];
-                echo "<tr class='success'><td><a href=\"#\" data-toggle=\"modal\" data-target=\"#roomModal\">".$row['roomNum']."</a></td>";
+                echo "<tr class='success'><td><a href=\"browseFloor.php?netID=$netID&password=$pwd&type='Inc'&type1='Single'&type2='Double'&type3='Triple'&type4='Quad'&modal=".$row['roomNum']."\">".$row['roomNum']."</a></td>";
 		echo "<td>";
 		echo "<form action=\"addToFavoritesAction.php\" method=\"post\">";
 	  	echo "<input type=\"hidden\" name=\"netID\" value=\"$netID\">";
@@ -257,20 +283,20 @@
   <div class ="col-sm-2">
     <table class="table table-bordered">
     <thead>
-        <tr><th colspan='3'>Your Favorite Rooms</th></tr>
+        <tr><th colspan='2'>Your Favorite Rooms</th></tr>
       </thead>
       <tbody>
         <!--Display available rooms-->
           <?php
             //query for available rooms
 	      $netID = $_REQUEST['netID'];
-              $query = "select distinct favoriteNumber, roomNum from Favorites where netID=$netID;";
+              $query = "select distinct roomNum from Favorites where netID=$netID;";
 	      $favs = mysqli_query($link,$query);
             //output data for numResidents
             if(mysqli_num_rows($favs) > 0){
               while($row = mysqli_fetch_assoc($favs)){
 		$roomNum = $row['roomNum'];
-                echo "<tr class='success'><td>".$row['favoriteNumber']."</td><td><a href=\"#\" data-toggle=\"modal\" data-target=\"#roomModal\">".$row['roomNum']."</a></td>";
+                echo "<tr class='success'><td><a href=\"browseFloor.php?netID=$netID&password=$pwd&type='Inc'&type1='Single'&type2='Double'&type3='Triple'&type4='Quad'&modal=".$row['roomNum']."\">".$row['roomNum']."</a></td>";
 		echo "<td>";
 		echo "<form action=\"deleteFromFavoritesAction.php\" method=\"post\">";
 	    		echo "<input type=\"hidden\" name=\"netID\" value=\"$netID\">";
@@ -295,6 +321,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
+	<?php if($_REQUEST['modal']) $roomNum = $_REQUEST['modal']; ?>
         <h4 class="modal-title"><?php echo "$dormName $roomNum"?></h4>
       </div>
       <div class="modal-body">
@@ -354,17 +381,25 @@
 	?>
       </div>
       <div class="modal-footer">
-	<form action="addToFavoritesAction.php" method="post">
-	  <input type="hidden" name="netID" value="echo $netID;\">
-	  <input type="hidden" name="dorm" value="echo $dormName;">
-	  <input type="hidden" name="roomNum" value="echo $roomNum;">
-   	  <button type="submit" class="btn btn-primary">Add room to Favorites</button>
-<!--	<form action="deleteFromFavoritesAction.php" method="post">
-          <input type="hidden" name="netID" value="echo $netID;">
-          <input type="hidden" name="dorm" value="echo $dormName;">
-          <input type="hidden" name="roomNum" value="echo $roomNum;">
-          <button type="submit" class="btn btn-danger">Delete room from Favorites</button>
-	</form>-->
+        <?php
+	    $checkFavs = "select * from Favorites where netID=$netID and dorm='$dormName' and roomNum='$roomNum';";
+	    $checkFavs = mysqli_query($link, $checkFavs);
+	    if(mysqli_num_rows($checkFavs) == 0){
+		echo "<form action=\"addToFavoritesAction.php\" method=\"post\">";
+		echo "<input type=\"hidden\" name=\"netID\" value=\"$netID\">";
+	 	echo "<input type=\"hidden\" name=\"pw\" value=\"$pwd\">";
+	 	echo "<input type=\"hidden\" name=\"dorm\" value=\"$dormName\">";
+	  	echo "<input type=\"hidden\" name=\"roomNum\" value=\"$roomNum\">";
+   	  	echo "<button type=\"submit\" class=\"btn btn-primary\">Add room to Favorites</button>";
+	    } else {
+		echo "<form action=\"deleteFromFavoritesAction.php\" method=\"post\">";
+		echo "<input type=\"hidden\" name=\"netID\" value=\"$netID\">";
+	 	echo "<input type=\"hidden\" name=\"pw\" value=\"$pwd\">";
+	 	echo "<input type=\"hidden\" name=\"dorm\" value=\"$dormName\">";
+	  	echo "<input type=\"hidden\" name=\"roomNum\" value=\"$roomNum\">";
+   	  	echo "<button type=\"submit\" class=\"btn btn-danger\">Delete room from Favorites</button>";
+	    }
+	?>
       </div>
 
     </div>
@@ -375,7 +410,14 @@
 <script> $("#zoom_01").elevateZoom({
 	zoomWindowWidth:750, 
 	zoomWindowHeight:500
-}); </script>
+}); 
+<?php
+  if($_REQUEST['modal']){
+    echo "$(window).load(function(){ $('#roomModal').modal('show'); });";
+  }
+?>
+
+</script>
 </body>
 <?php
 mysqli_close($link);

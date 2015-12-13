@@ -127,20 +127,59 @@ while($row = mysqli_fetch_assoc($staff)){
         }
     }
 }
+
 //check if the section is a party section
-//$party = "select count(*) from Room, Resident, Section where Section.ID=Room.sectionID and Room.roomNum=Resident.roomNum and Resident.party=1 and Section.ID=$section;";
-//$party = mysqli_query($link, $party);
-//echo $party;
+$partyYes = "select A.roomNum, A.dorm, A.sectionID from Available A, ( select ID, dorm, sectionName, count(case when party=1 then 1 end) as party, count(case when party=0 then 1 end) as noParty from (select R.name, R.dorm, R.roomNum, S.ID, S.name as sectionName, party   from Resident R, (     select R.roomNum, S.ID, S.name, S.dorm      from Room R, Section S      where S.ID=R.sectionID) S   where R.roomNum=S.roomNum   and R.dorm=S.dorm   ) S group by S.ID  having party > noParty ) P where P.ID = A.sectionID and A.dorm = '$dorm';";
+$partyNo = "select A.roomNum, A.dorm, A.sectionID from Available A, ( select ID, dorm, sectionName, count(case when party=1 then 1 end) as party, count(case when party=0 then 1 end) as noParty from (select R.name, R.dorm, R.roomNum, S.ID, S.name as sectionName, party   from Resident R, (     select R.roomNum, S.ID, S.name, S.dorm      from Room R, Section S      where S.ID=R.sectionID) S   where R.roomNum=S.roomNum   and R.dorm=S.dorm   ) S group by S.ID  having party < noParty ) P where P.ID = A.sectionID and A.dorm = '$dorm';";
+if($preferences['party'] == 1){
+  $partyYes = mysqli_query($link, $partyYes);
+  while($row = mysqli_fetch_assoc($partyYes)){
+    $roomArray[$row['roomNum']]+=2;
+  }
+  $partyNo = mysqli_query($link, $partyNo);
+  while($row = mysqli_fetch_assoc($partyNo)){
+    $roomArray[$row['roomNum']]--;
+  }
+} else if($preferences['party'] == 0) {
+  $partyYes = mysqli_query($link, $partyYes);
+  while($row = mysqli_fetch_assoc($partyYes)){
+    $roomArray[$row['roomNum']]-=2;
+  }
+  $partyNo = mysqli_query($link, $partyNo);
+  while($row = mysqli_fetch_assoc($partyNo)){
+    $roomArray[$row['roomNum']]++;
+  }
+}
 
 //check if the section is a study section
-/*
-select count(*) from Room, Resident, Section where Section.ID=Room.sectionID and Room.roomNum=Resident.roomNum and Resident.study=1;
-*/
+$studyYes = "select A.roomNum, A.dorm, A.sectionID from Available A, ( select ID, dorm, sectionName, count(case when study=1 then 1 end) as study, count(case when study=0 then 1 end) as noStudy from (select R.name, R.dorm, R.roomNum, S.ID, S.name as sectionName, study   from Resident R, (     select R.roomNum, S.ID, S.name, S.dorm      from Room R, Section S      where S.ID=R.sectionID) S   where R.roomNum=S.roomNum   and R.dorm=S.dorm   ) S group by S.ID  having study > noStudy ) P where P.ID = A.sectionID and A.dorm = '$dorm';";
+$studyNo = "select A.roomNum, A.dorm, A.sectionID from Available A, ( select ID, dorm, sectionName, count(case when study=1 then 1 end) as study, count(case when study=0 then 1 end) as noStudy from (select R.name, R.dorm, R.roomNum, S.ID, S.name as sectionName, study   from Resident R, (     select R.roomNum, S.ID, S.name, S.dorm      from Room R, Section S      where S.ID=R.sectionID) S   where R.roomNum=S.roomNum   and R.dorm=S.dorm   ) S group by S.ID  having study < noStudy ) P where P.ID = A.sectionID and A.dorm = '$dorm';";
+if($preferences['study'] == 1){
+  $studyYes = mysqli_query($link, $studyYes);
+  while($row = mysqli_fetch_assoc($studyYes)){
+    $roomArray[$row['roomNum']]+=2;
+  }
+  $studyNo = mysqli_query($link, $studyNo);
+  while($row = mysqli_fetch_assoc($studyNo)){
+    $roomArray[$row['roomNum']]--;
+  }
+} else if($preferences['study'] == 0) {
+  $studyYes = mysqli_query($link, $studyYes);
+  while($row = mysqli_fetch_assoc($studyYes)){
+    $roomArray[$row['roomNum']]-=2;
+  }
+  $studyNo = mysqli_query($link, $studyNo);
+  while($row = mysqli_fetch_assoc($studyNo)){
+    $roomArray[$row['roomNum']]++;
+  }
+}
 
 //check how many people from your grade are in your section
-/*
-select count(*) from Room, Resident, Section where Section.ID=Room.sectionID and Room.roomNum=Resident.roomNum and Resident.year;
-*/
+$sameYear = "select A.roomNum, A.dorm, A.sectionID from Available A, ( select ID, dorm, sectionName, count(case when year=".$preferences['year']." then 1 end) as sameGrade, count(case when year<>".$preferences['year']." then 1 end) as diffGrade from (select R.name, R.dorm, R.roomNum, S.ID, S.name as sectionName, year   from Resident R, (     select R.roomNum, S.ID, S.name, S.dorm     from Room R, Section S     where S.ID=R.sectionID) S   where R.roomNum=S.roomNum   and R.dorm=S.dorm   ) S group by S.ID  having sameGrade > diffGrade ) P where P.ID = A.sectionID and A.dorm = '$dorm';";
+$sameYear = mysqli_query($link, $sameYear);
+while($row = mysqli_fetch_assoc($studyYes)){
+  $roomArray[$row['roomNum']]++;
+}
 
 //Enter the array into the database
 $query = "delete from Recommended where netID='$netID';";
@@ -149,7 +188,6 @@ foreach($roomArray as $room => $score){
     echo "<p>$room = $score</p>";
     $query = "insert into Recommended (netID, roomNum, dorm, score, sqareFootage) select '$netID', '$room', '$dorm', '$score', sqareFootage from Room where roomNum='$room' and dorm='$dorm';";
     if(mysqli_query($link, $query)){
-        echo "Good Job";
     } else {
         echo $query;
     }
